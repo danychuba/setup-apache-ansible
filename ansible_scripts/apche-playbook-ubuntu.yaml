@@ -1,0 +1,33 @@
+#WRITE A PLAY TO SETUP APACHE AND GIT ON UBUNTU SERVERS
+- name: configure apache on ubuntu instances
+  hosts: ubuntuwebservers
+  tasks:
+    - name: Update all packages to their latest version
+      apt:
+        name: "*"
+        state: latest
+    - name: Install latest version of apache
+      apt:
+        name: apache2
+        state: latest  
+    - name: Start service httpd, if not started
+      ansible.builtin.service:
+        name: apache2
+        state: started
+    - name: Enable service httpd, and not touch the state
+      ansible.builtin.service:
+        name: apache2
+        enabled: yes
+    - name: Copy index file from the controller to the clients
+      ansible.builtin.copy:
+        src: /home/ubuntu/test2/index.html # on the clients
+        dest: /var/www/html/ # clients
+
+- name: configure Git on ubuntu instances
+  hosts: ubuntuwebservers
+  tasks:
+    - name: Install latest git
+      apt:
+        name: git
+        state: latest  
+    
